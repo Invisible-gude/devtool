@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test": "tsc --noEmit false --outDir .test-build && node --test .test-build/tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate"
   },

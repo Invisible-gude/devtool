@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>สมัครสมาชิก · Drop-off Station</title>
+  <style>
+    :root{font-family:Inter,'Noto Sans Thai',system-ui,sans-serif;color:#172238;background:#f5f7fb}
+    *{box-sizing:border-box}body{margin:0}a{color:#dc4c2e;text-decoration:none}a:hover{text-decoration:underline}
+    header{min-height:70px;background:#fff;border-bottom:1px solid #e5eaf0;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px max(24px,calc((100vw - 1280px)/2))}
+    .brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;color:#172238;white-space:nowrap}.brand:hover{text-decoration:none}.logo{background:#ee4d2d;color:white;padding:10px;border-radius:12px}.accent{color:#ee4d2d}
+    main{max-width:520px;margin:48px auto;padding:0 20px 32px}.panel{background:#fff;border:1px solid #e5eaf0;border-radius:18px;padding:32px;box-shadow:0 6px 22px #152b4508}
+    .pill{display:inline-block;background:#fff1eb;color:#df4d2f;padding:6px 11px;border-radius:50px;font-size:12px;margin-bottom:16px}h1{font-size:27px;margin:0 0 8px}p{margin:0;line-height:1.7}.muted{color:#657286;font-size:14px}
+    form{margin-top:26px}fieldset{border:0;padding:0;margin:0;min-width:0}.field{margin-bottom:19px}label{display:block;font-weight:650;font-size:14px;margin-bottom:8px}input{width:100%;border:1px solid #dbe1e9;border-radius:10px;padding:13px 14px;font:inherit;font-size:15px;background:white}
+    input:focus-visible{outline:2px solid #ee4d2d;outline-offset:2px}.hint{color:#657286;font-size:12px;margin-top:6px}button{width:100%;cursor:pointer;border:0;border-radius:10px;padding:14px 17px;font:inherit;font-weight:750;font-size:15px;background:#ee4d2d;color:white}button:disabled{opacity:.6;cursor:wait}
+    .message{padding:14px;border-radius:10px;font-size:14px;line-height:1.7;margin-top:20px;overflow-wrap:anywhere}.error{background:#fff0ee;color:#b6342c}.success{background:#eaf9f0;color:#168653}.back{display:block;text-align:center;margin-top:24px;font-size:14px}[hidden]{display:none!important}
+    @media(max-width:500px){header{padding:12px 16px}.brand{font-size:16px;gap:6px}header>a:last-child{font-size:12px}main{margin-top:28px;padding:0 16px 24px}.panel{padding:24px}}
+  </style>
+  <script src="register.js" defer></script>
+</head>
+<body>
+  <header>
+    <a class="brand" href="index.html"><span class="logo" aria-hidden="true">▣</span> Drop-off <span class="accent">Station</span></a>
+    <a href="index.html">กลับหน้าหลัก</a>
+  </header>
+  <main>
+    <section class="panel" aria-labelledby="register-title">
+      <span class="pill">Drop-off Station</span>
+      <h1 id="register-title">สมัครสมาชิก</h1>
+      <p class="muted">กรอกข้อมูลด้านล่างเพื่อสร้างบัญชีของคุณ</p>
+      <form id="register-form" action="/api/register" method="post">
+        <fieldset id="register-fields">
+          <div class="field">
+            <label for="name">ชื่อ-นามสกุล</label>
+            <input id="name" name="name" autocomplete="name" maxlength="100" placeholder="กรอกชื่อและนามสกุล" required>
+          </div>
+          <div class="field">
+            <label for="email">อีเมล</label>
+            <input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="password">รหัสผ่าน</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" aria-describedby="password-hint" required>
+            <p id="password-hint" class="hint">ใช้รหัสผ่าน 8–128 ตัวอักษร</p>
+          </div>
+          <div class="field">
+            <label for="passwordConfirmation">ยืนยันรหัสผ่าน</label>
+            <input id="passwordConfirmation" name="passwordConfirmation" type="password" autocomplete="new-password" minlength="8" maxlength="128" required>
+          </div>
+          <button id="register-button" type="submit">สมัครสมาชิก</button>
+        </fieldset>
+      </form>
+      <div id="register-error" class="message error" role="alert" tabindex="-1" hidden></div>
+      <div id="register-success" class="message success" role="status" tabindex="-1" hidden></div>
+      <noscript><p class="message error">กรุณาเปิด JavaScript เพื่อสมัครสมาชิก</p></noscript>
+      <a class="back" href="index.html">← กลับหน้า Drop-off Station</a>
+    </section>
+  </main>
+</body>
+</html>
