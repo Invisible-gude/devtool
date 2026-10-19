@@ -5,7 +5,9 @@
   "scripts": {
     "test": "tsc --noEmit false --outDir .test-build && node --test .test-build/tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "build": "vite build",
+    "dev": "vite"
   },
   "dependencies": {
     "@netlify/database": "^2.0.1",
@@ -15,6 +17,12 @@
   "devDependencies": {
     "@types/node": "^26.6.5",
     "drizzle-kit": "^1.0.0-beta.22",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "@tailwindcss/vite": "^4.0.0",
+    "axios": "^1.11.0",
+    "concurrently": "^9.0.1",
+    "laravel-vite-plugin": "^2.0.0",
+    "tailwindcss": "^4.0.0",
+    "vite": "^7.0.7"
   }
 }
