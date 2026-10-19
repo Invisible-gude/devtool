@@ -1,22 +1,17 @@
-# ตารางผู้ใช้สำหรับ Laravel / MySQL
+# ฐานข้อมูลผู้ใช้บน Netlify
 
-ไฟล์ `migrations/2026_10_19_000000_create_users_table.php` เตรียมตาราง `users` สำหรับใช้กับ Laravel โดยมี ID, ชื่อ, อีเมลที่ไม่ซ้ำ, วันยืนยันอีเมล, รหัสผ่าน, remember token และวันสร้าง/แก้ไข
+โปรเจกต์นี้ใช้ Netlify Database (PostgreSQL) ผ่าน `@netlify/database` และ Drizzle ORM สำหรับข้อมูลผู้ใช้ การเชื่อมต่ออยู่ฝั่งเซิร์ฟเวอร์และ Netlify จัดการให้โดยอัตโนมัติ ไม่ต้องใส่ข้อมูลเชื่อมต่อใน HTML
 
-โปรเจกต์นี้เป็นเว็บ HTML ยังไม่มีแอป Laravel, ไฟล์ `artisan` หรือเซิร์ฟเวอร์ MySQL ไฟล์ migration นี้จึงยังไม่ได้สร้างฐานข้อมูลหรือตารางจริง และยังไม่ได้เชื่อมหน้าเว็บกับฐานข้อมูล
+โครงสร้างตารางอยู่ใน `db/schema.ts` มี ID ชื่อ อีเมลที่ไม่ซ้ำ วันยืนยันอีเมล และวันสร้าง/แก้ไข ขณะอัปเดตข้อมูลผู้ใช้ ให้กำหนด `updatedAt` เป็นเวลาปัจจุบันด้วย ยังไม่มีระบบสมัครสมาชิก เข้าสู่ระบบ หรือ API สำหรับอ่านและแก้ไขข้อมูลผู้ใช้ผ่านเว็บ และไม่ได้จัดเก็บรหัสผ่าน
 
-## วิธีใช้ในแอป Laravel
+## การ deploy
 
-1. เตรียมแอป Laravel บนโฮสต์ที่รัน PHP และจัดเตรียมเซิร์ฟเวอร์ MySQL พร้อมฐานข้อมูลและบัญชีสำหรับแอป Netlify ไม่ได้รัน Laravel/PHP backend โดยตรง ส่วน Netlify Database ใช้ PostgreSQL
-2. คัดลอก migration นี้ไปที่ `database/migrations` ของแอป Laravel ถ้ามี migration สร้างตาราง `users` อยู่แล้ว ให้ใช้ migration เดิมหรือปรับรวมให้เหลือไฟล์สร้างตารางนี้เพียงไฟล์เดียว ไม่ควรรันไฟล์นี้ซ้ำกับตารางที่มีอยู่แล้ว
-3. ตั้งค่า `DB_CONNECTION` เป็น `mysql` และกำหนด `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` ใน environment ของโฮสต์ Laravel ตามข้อมูลฐานข้อมูลจริง เก็บค่าลับไว้ฝั่งเซิร์ฟเวอร์ ไม่ใส่ใน HTML หรือ commit ลง repository
-4. รันคำสั่งจากโฟลเดอร์แอป Laravel:
+ติดตั้ง dependency ด้วย `npm ci` แล้ว deploy ผ่านขั้นตอนของ Netlify ตามปกติ Netlify จัดเตรียมฐานข้อมูลให้อัตโนมัติ และใช้ migration ใน `netlify/database/migrations/` ก่อนเผยแพร่ production ส่วน deploy preview ใช้ฐานข้อมูลแยกจาก production
 
-   ```sh
-   php artisan config:clear
-   php artisan migrate
-   php artisan migrate:status
-   ```
+เมื่อ deploy สำเร็จ เปิด `/api/database-health` บนเว็บไซต์ production ควรได้รับ HTTP 200 และ `{"status":"ok"}` ซึ่งตรวจสอบทั้งการเชื่อมต่อและการมีอยู่ของตารางผู้ใช้โดยไม่อ่านหรือเปิดเผยข้อมูลผู้ใช้ หากยังไม่พร้อมจะตอบ HTTP 503 โดยไม่แสดงรายละเอียดการเชื่อมต่อ
 
-บันทึกรหัสผ่านผ่าน `Hash::make()` หรือ hashed cast ของ Laravel เท่านั้น ตารางนี้ไม่ได้เพิ่มระบบสมัครสมาชิกหรือเข้าสู่ระบบ และไม่มีบัญชีหรือรหัสผ่านเริ่มต้น
+## การพัฒนาต่อ
 
-เมธอด `down()` รองรับ rollback โดยลบตาราง `users` และข้อมูลในตาราง จึงควรใช้ด้วยความระมัดระวัง
+นำ `getDb` จาก `db/index.ts` และ `users` จาก `db/schema.ts` ไปใช้เฉพาะในโค้ดฝั่งเซิร์ฟเวอร์ เมื่อแก้ schema ให้สร้าง migration ด้วย `npm run db:generate -- --name add_descriptive_change` และนำไฟล์ที่สร้างขึ้นไป deploy พร้อมโค้ด ห้ามใช้คำสั่ง push หรือ migrate เพื่อแก้ฐานข้อมูลโดยตรง
+
+ไฟล์ PHP ใน `database/migrations/` เป็นตัวอย่าง Laravel/MySQL จากงานก่อนหน้า ไม่ได้ใช้กับ Netlify Database และไม่ต้องรัน หน้า Drop-off เดิมยังเป็นข้อมูลจำลองและไม่ได้เชื่อมกับตารางผู้ใช้
